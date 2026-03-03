@@ -9,7 +9,7 @@ class POLMData:
     """POLM structure from bbox annotations"""
     object_type: str
     bbox: List[float]  # [x1, y1, x2, y2]
-    confidence: float
+    # confidence: float
     relative_position: str
     distance_zone: float
     coming_to_user: bool
