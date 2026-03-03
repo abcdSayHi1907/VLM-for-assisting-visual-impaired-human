@@ -11,7 +11,7 @@ class POLMData:
     bbox: List[float]  # [x1, y1, x2, y2]
     # confidence: float
     relative_position: str
-    distance_zone: float
+    distance_zone: str
     coming_to_user: bool
     speed: float
     def to_text(self) -> str:
