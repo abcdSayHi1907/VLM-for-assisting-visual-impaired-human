@@ -80,10 +80,11 @@ class WADDataset(Dataset):
                         distance_zone = bbox.get('distance_zone', 'unknown'),
                         coming_to_user = bbox.get('coming_to_user', False),
                         speed = bbox.get('speed', 0.0),
+                        danger_score = bbox.get('danger_score', 0.0),
                     )
                     polm_list.append(polm)
-                polm_list.sort(key=lambda x: x.distance_zone, reverse=True)
-        return polm_list
+                polm_list.sort(key=lambda x: x.danger_score, reverse=True)
+        return polm_list[:30]
 
     def _select_frames_safe(self, frame_path: str, num_frames: int = 1) -> List[int]:
         # (Giữ nguyên logic cũ của bạn)
@@ -137,8 +138,6 @@ class WADDataset(Dataset):
             prompt_input_ids = inputs['input_ids'].squeeze(0)
             prompt_attention_mask = inputs['attention_mask'].squeeze(0)
             pixel_values = inputs['pixel_values'].squeeze(0)
-            
-            print(f"📏 Prompt length (before adding answer): {len(prompt_input_ids)} tokens")
 
             # 4. Tokenize Answer
             answer_tokens = self.tokenizer(
@@ -161,6 +160,8 @@ class WADDataset(Dataset):
                 torch.full((len(prompt_input_ids),), -100, dtype=torch.long),
                 answer_input_ids
             ], dim=0)
+
+            print(f"📏 Total: {len(input_ids)} = {len(prompt_input_ids)} + {len(answer_input_ids)}")
 
             # 6. Return
             return_dict = {
@@ -229,7 +230,8 @@ def build_dataset(config: Dict, processor, tokenizer):
             'relative_position': bbox_entry.get('relative_position', "unknown"),
             'distance_zone': bbox_entry.get('distance_zone', 'unknown'),
             'coming_to_user': bbox_entry.get('coming_to_user', False),
-            'speed': bbox_entry.get('speed', 0.0)
+            'speed': bbox_entry.get('speed', 0.0),
+            'danger_score': bbox_entry.get('danger_score', 0.0),
         })
     
     # Load frame index
