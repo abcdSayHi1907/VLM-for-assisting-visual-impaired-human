@@ -214,7 +214,7 @@ def build_dataset(config: Dict, processor, tokenizer):
     print("Loading bboxes...")
     bbox_dataset = load_dataset(
         config['data']['name'],
-        data_files="all_bboxes.jsonl",
+        data_files="all_bboxes_2.jsonl",
         split="train"
     )
     
